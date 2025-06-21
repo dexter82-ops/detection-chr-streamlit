@@ -36,9 +36,9 @@ def compute_chr_score(row):
     # Vérification des mots-clés dans le nom ou l'adresse
     combined_text = str(row.get('Nom du destinataire', '')) + ' ' + str(row.get('Adresse 1', '')) + ' ' + str(row.get('Adresse 2', ''))
     if is_chr_match(combined_text, keywords):
-    score += 3
+        score += 3
     if is_chr_match(combined_text, non_chr_keywords):
-    score -= 3
+        score -= 3
     
     # if any(word in combined_text.lower() for word in keywords):
         #score += 3
