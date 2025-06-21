@@ -7,7 +7,6 @@ from io import StringIO
 from sklearn.feature_extraction.text import CountVectorizer
 
 # Fonction pour détecter les faux positifs
-import re
 
 def is_chr_match(text, keywords):
     if not isinstance(text, str):
