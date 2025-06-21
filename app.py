@@ -83,6 +83,8 @@ if uploaded_file:
     st.dataframe(data[['Nom du destinataire', 'Adresse 1', 'Adresse 2', 'ville destinataire', 'score_CHR', 'identification_CHR']])
 
     # Carte interactive
+    map_data = data.dropna(subset=['latitude', 'longitude'])
+    st.write("Aperçu des coordonnées valides pour la carte :", map_data[['latitude', 'longitude']].head(10))
     try:
         import pydeck as pdk
         map_data = data.dropna(subset=['latitude', 'longitude'])
