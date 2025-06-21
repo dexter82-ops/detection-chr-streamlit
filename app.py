@@ -20,7 +20,7 @@ def compute_chr_score(row):
     lat, lon = row.get('latitude', 0), row.get('longitude', 0)
 
     # Vérification des mots-clés dans le nom ou l'adresse
-    combined_text = str(row.get('Nom du destinataire', '')) + ' ' + str(row.get('Adresse 1 destinataire', '')) + ' ' + str(row.get('Adresse 2 destinataire', ''))
+    combined_text = str(row.get('Nom du destinataire', '')) + ' ' + str(row.get('Adresse 1', '')) + ' ' + str(row.get('Adresse 2', ''))
     if any(word in combined_text.lower() for word in keywords):
         score += 3
     if any(word in combined_text.lower() for word in non_chr_keywords):
@@ -62,7 +62,7 @@ if uploaded_file:
     data['identification_CHR'] = data['score_CHR'].apply(classify_score)
 
     st.write("Aperçu des données avec classification CHR :")
-    st.dataframe(data[['Nom du destinataire', 'Adresse 1 destinataire', 'Adresse 2 destinataire', 'ville destinataire', 'score_CHR', 'identification_CHR']])
+    st.dataframe(data[['Nom du destinataire', 'Adresse 1', 'Adresse 2', 'ville destinataire', 'score_CHR', 'identification_CHR']])
 
     # Carte interactive
     try:
