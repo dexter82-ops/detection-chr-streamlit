@@ -7,13 +7,17 @@ from io import StringIO
 from sklearn.feature_extraction.text import CountVectorizer
 
 # Fonction pour détecter les faux positifs
-def is_chr_nom(nom):
-    chr_keywords = ['bar', 'café', 'brasserie', 'restaurant', 'bistrot', 'hôtel', 'auberge', 'pub']
-    for kw in chr_keywords:
-        # \b = "début ou fin de mot" → évite bar*thélémy
-        if re.search(rf'\b{kw}\b', nom.lower()):
+import re
+
+def is_chr_match(text, keywords):
+    if not isinstance(text, str):
+        return False
+    for kw in keywords:
+        if re.search(rf'\\b{kw}\\b', text.lower()):
             return True
     return False
+
+
 
 # Fonction pour détecter l'encodage d'un fichier
 def detect_encoding(file):
@@ -31,10 +35,15 @@ def compute_chr_score(row):
 
     # Vérification des mots-clés dans le nom ou l'adresse
     combined_text = str(row.get('Nom du destinataire', '')) + ' ' + str(row.get('Adresse 1', '')) + ' ' + str(row.get('Adresse 2', ''))
-    if any(word in combined_text.lower() for word in keywords):
-        score += 3
-    if any(word in combined_text.lower() for word in non_chr_keywords):
-        score -= 3
+    if is_chr_match(combined_text, keywords):
+    score += 3
+    if is_chr_match(combined_text, non_chr_keywords):
+    score -= 3
+    
+    # if any(word in combined_text.lower() for word in keywords):
+        #score += 3
+    #if any(word in combined_text.lower() for word in non_chr_keywords):
+        #score -= 3
 
     # Analyse de la ville
     if row.get('ville destinataire', '') in urban_areas:
