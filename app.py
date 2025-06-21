@@ -86,6 +86,7 @@ if uploaded_file:
     try:
         import pydeck as pdk
         map_data = data.dropna(subset=['latitude', 'longitude'])
+        st.write("Échantillon des données carte :", map_data[['latitude', 'longitude']].head())
         st.pydeck_chart(pdk.Deck(
             map_style="mapbox://styles/mapbox/light-v9",
             initial_view_state=pdk.ViewState(
