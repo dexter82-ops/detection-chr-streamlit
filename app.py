@@ -5,6 +5,8 @@ import chardet
 from io import StringIO
 from sklearn.feature_extraction.text import CountVectorizer
 
+import re
+
 # Fonction pour détecter l'encodage d'un fichier
 def detect_encoding(file):
     raw_data = file.read()
