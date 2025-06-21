@@ -2,10 +2,18 @@
 import streamlit as st
 import pandas as pd
 import chardet
+import re
 from io import StringIO
 from sklearn.feature_extraction.text import CountVectorizer
 
-import re
+# Fonction pour détecter les faux positifs
+def is_chr_nom(nom):
+    chr_keywords = ['bar', 'café', 'brasserie', 'restaurant', 'bistrot', 'hôtel', 'auberge', 'pub']
+    for kw in chr_keywords:
+        # \b = "début ou fin de mot" → évite bar*thélémy
+        if re.search(rf'\b{kw}\b', nom.lower()):
+            return True
+    return False
 
 # Fonction pour détecter l'encodage d'un fichier
 def detect_encoding(file):
