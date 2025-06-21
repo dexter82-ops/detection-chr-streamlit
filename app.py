@@ -42,7 +42,7 @@ def compute_chr_score(row):
     
     # if any(word in combined_text.lower() for word in keywords):
         #score += 3
-    #if any(word in combined_text.lower() for word in non_chr_keywords):
+    # if any(word in combined_text.lower() for word in non_chr_keywords):
         #score -= 3
 
     # Analyse de la ville
