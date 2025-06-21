@@ -55,7 +55,7 @@ def get_place_type_osm(lat, lon):
 uploaded_file = st.file_uploader("Déposer un fichier CSV", type=["csv"])
 
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file, encoding='latin1')
+    df = pd.read_csv(uploaded_file, encoding='latin1', sep=';')
     st.write("Aperçu des données :", df.head())
 
     if st.button("Lancer l’analyse CHR"):
