@@ -105,8 +105,8 @@ if uploaded_file:
                 ),
             ],
         ))
-    except:
-        st.warning("Carte non affichée (pydeck manquant ou données GPS incomplètes).")
+    except Exception as e:
+        st.error(f"Erreur lors de l'affichage de la carte : {e}")
 
     # Export
     csv_output = data.to_csv(index=False).encode('utf-8')
