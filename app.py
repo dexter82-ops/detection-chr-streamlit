@@ -62,7 +62,9 @@ if uploaded_file:
     data['identification_CHR'] = data['score_CHR'].apply(classify_score)
 
     st.write("Aperçu des données avec classification CHR :")
-    st.dataframe(data[['Nom du destinataire', 'Adresse 1', 'Adresse 2', 'Ville destinataire', 'score_CHR', 'identification_CHR']])
+    st.dataframe(data[['Nom du destinataire', 'Adresse 1', 'Adresse 2', 'Ville destinataire']])
+
+#'score_CHR', 'identification_CHR'
 
     # Carte interactive
     try:
