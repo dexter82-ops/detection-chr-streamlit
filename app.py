@@ -2,21 +2,8 @@
 import streamlit as st
 import pandas as pd
 import chardet
-import re
 from io import StringIO
 from sklearn.feature_extraction.text import CountVectorizer
-
-# Fonction pour détecter les faux positifs
-
-def is_chr_match(text, keywords):
-    if not isinstance(text, str):
-        return False
-    for kw in keywords:
-        if re.search(rf'\\b{kw}\\b', text.lower()):
-            return True
-    return False
-
-
 
 # Fonction pour détecter l'encodage d'un fichier
 def detect_encoding(file):
@@ -33,19 +20,14 @@ def compute_chr_score(row):
     lat, lon = row.get('latitude', 0), row.get('longitude', 0)
 
     # Vérification des mots-clés dans le nom ou l'adresse
-    combined_text = str(row.get('Nom du destinataire', '')) + ' ' + str(row.get('Adresse 1', '')) + ' ' + str(row.get('Adresse 2', ''))
-    if is_chr_match(combined_text, keywords):
+    combined_text = str(row.get('Nom du destinataire', '')) + ' ' + str(row.get('Adresse 1', ''))+ ' ' + str(row.get('Adresse 2', ''))
+    if any(word in combined_text.lower() for word in keywords):
         score += 3
-    if is_chr_match(combined_text, non_chr_keywords):
+    if any(word in combined_text.lower() for word in non_chr_keywords):
         score -= 3
-    
-    # if any(word in combined_text.lower() for word in keywords):
-        #score += 3
-    # if any(word in combined_text.lower() for word in non_chr_keywords):
-        #score -= 3
 
     # Analyse de la ville
-    if row.get('ville destinataire', '') in urban_areas:
+    if row.get('Ville destinataire', '') in urban_areas:
         score += 2
 
     # Analyse GPS (exemple : lat/lon à Paris)
@@ -80,15 +62,12 @@ if uploaded_file:
     data['identification_CHR'] = data['score_CHR'].apply(classify_score)
 
     st.write("Aperçu des données avec classification CHR :")
-    st.dataframe(data[['Nom du destinataire', 'Adresse 1', 'Adresse 2', 'ville destinataire', 'score_CHR', 'identification_CHR']])
+    st.dataframe(data[['Nom du destinataire', 'Adresse 1', 'Adresse 2', 'Ville destinataire', 'score_CHR', 'identification_CHR']])
 
     # Carte interactive
-    map_data = data.dropna(subset=['latitude', 'longitude'])
-    st.write("Aperçu des coordonnées valides pour la carte :", map_data[['latitude', 'longitude']].head(10))
     try:
         import pydeck as pdk
         map_data = data.dropna(subset=['latitude', 'longitude'])
-        st.write("Échantillon des données carte :", map_data[['latitude', 'longitude']].head())
         st.pydeck_chart(pdk.Deck(
             map_style="mapbox://styles/mapbox/light-v9",
             initial_view_state=pdk.ViewState(
@@ -107,8 +86,8 @@ if uploaded_file:
                 ),
             ],
         ))
-    except Exception as e:
-        st.error(f"Erreur lors de l'affichage de la carte : {e}")
+    except:
+        st.warning("Carte non affichée (pydeck manquant ou données GPS incomplètes).")
 
     # Export
     csv_output = data.to_csv(index=False).encode('utf-8')
